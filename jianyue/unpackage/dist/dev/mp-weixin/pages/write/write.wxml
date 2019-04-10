@@ -1,0 +1,1 @@
+<view class="container" bind:__l="__l"><view class="title"><input type="text" maxlength="20" placeholder="请输入标题"/></view><view class="main-body"><input type="text" maxlength="-1" placeholder="请输入正文"/></view><view class="release"><text>发布</text></view></view>

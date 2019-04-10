@@ -1,0 +1,28 @@
+
+.list {
+	margin-top: 5px;
+}
+.option{
+	margin-left: 5px;
+}
+.list-item {
+	height: 30px;
+
+	margin-top: 5px;
+	
+
+	display: -webkit-box;
+	
+
+	display: -webkit-flex;
+	
+
+	display: -ms-flexbox;
+	
+
+	display: flex;
+	-webkit-align-content: center;
+	    -ms-flex-line-pack: center;
+	        align-content: center;
+}
+
