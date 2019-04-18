@@ -5,12 +5,22 @@
 			<view class="search-text">
 				<input type="text" class="search" placeholder="搜索文章/专题/用户/文集" v-model="searchstr" />
 			</view>
-			<view class="search-icon">
-				<image src="../../static/search-grey.png" @tap="search()"></image>
+			<view class="search-icon" >
+				<image src="../../static/search-grey.png"  @tap="search()" ></image>
 			</view>
 		</view>
 		
-		<view class="main" v-for="(meg,index) in msgs" :key=index v-show="showall" >
+		
+		<view class="article" v-for="(article, index) in articles" :key="index" >
+			<view class="article-box">
+				<text class="article-title" @tap="gotoDetail(article.id)">{{ article.title }}</text>
+			</view>
+			
+			
+		</view>	
+		
+		
+		<!-- <view class="main" v-for="(meg,index) in msgs" :key=index v-show="showall" >
 			<view class="main-box">
 				<view class="box-id">
 					{{meg.id}}
@@ -27,66 +37,36 @@
 				</view>
 				
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
 <script>
 	export default{
-		data () {
-			return{
+		data() {
+			return {
 				showall:true,
 				searchstr: '',
+				article: {
+					
+					aId: 0,
+					title: '',
+					content: '',
+					nickname: '',
+					createTime: ''
+					},
+				articles: [],
 				
-				msgs:[
-					{
-						id:1,
-						title:'每个互联网创业者都应该了解的：10项早起做产品的原则',
-						reading:'141'
-					},
-					{
-						id:2,
-						title:'有趣或无趣。充实或乏味，全在你一念之间',
-						reading:'301'
-					},
-					{
-						id:3,
-						title:'人性中的6大怪物，太多现代人沉迷其中，不自知！',
-						reading:'474'
-					},
-					{
-						id:4,
-						title:'中老年人一定要坚守8大防线',
-						reading:'741'
-					},
-					{
-						id:5,
-						title:'自然的教育--用布道者的虔诚去传播美的感动',
-						reading:'8465'
-					},
-					{
-						id:6,
-						title:'詹宁斯诗歌四首，感受不一样的心灵疗救之歌',
-						reading:'321'
-					},
-					{
-						id:7,
-						title:'每个互联网创业者都应该了解的：10项早起做产品的原则',
-						reading:'855'
-					},
-					{
-						id:8,
-						title:'每个互联网创业者都应该了解的：10项早起做产品的原则',
-						reading:'1267'
-					},
-					{
-						id:9,
-						title:'每个互联网创业者都应该了解的：10项早起做产品的原则',
-						reading:'874'
-					}
-					]
-			}
+			};
 		},
+		onLoad: function() {
+			this.getArticles();
+		},
+		onShow: function() {},
+		onPullDownRefresh: function() {
+			this.getArticles();
+		},
+		
 		computed: {
 			filterArticles: function() {
 				var filterArray = this.msgs;
@@ -108,7 +88,57 @@
 					return filterArray;
 				}
 			}
-		}
+		},
+		
+		methods: {
+			
+			
+			getArticles: function() {
+				var _this = this;
+				uni.request({
+					url: this.apiServer + '/article/list',
+					method: 'GET',
+					header: { 'content-type': 'application/x-www-form-urlencoded' },
+					success: res => {
+						_this.articles = res.data.data;
+						for (var i = 0; i < _this.articles.length; i++) {
+								_this.articles[i].createTime = this.handleTime(_this.articles[i].createTime);
+								_this.articles[i].content = this.handleContent(_this.articles[i].content);
+							}
+					},
+					complete: function() {
+						uni.stopPullDownRefresh();
+					}
+				});
+			},
+			
+			gotoDetail: function(aId) {
+				uni.navigateTo({
+					url: '../article_detail/article_detail?aId=' + aId
+				})
+			},
+			
+			handleTime: function(date) {
+					var d = new Date(date);
+					var year = d.getFullYear();
+					var month = d.getMonth() + 1;
+					var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate();
+					var hour = d.getHours() < 10 ? '0' + d.getHours() : '' + d.getHours();
+					var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : '' + d.getMinutes();
+					var seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : '' + d.getSeconds();
+					return year + '-' + month + '-' + day + ' ' + hour + ":" + minutes + ':' + seconds
+				},
+			
+			handleContent: function(msg) {
+					let description = msg;
+					description = description.replace(/(\n)/g, "");
+					description = description.replace(/(\t)/g, "");
+					description = description.replace(/(\r)/g, "");
+					description = description.replace(/<\/?[^>]*>/g, "");
+					description = description.replace(/\s*/g, "");
+					return msg.substring(0, 50);;
+				}
+		},
 		
 		
 	}
@@ -134,24 +164,17 @@
 	width: 100%;
 	height: 100%;
 }
-.main{
-	margin-top: 5px;
-}
-.main-box{
+
+
+.article{
 	margin-bottom: 5px;
 	display: flex;
-	border-bottom: 1px solid #aaaaaa;
+	align-items: center;
 }
-.box-id{
-	display: flex;
-	justify-content: center;
-	align-content: center;
-}
-.main-title{
+.article-box{
 	font-size: 13pt;
 }
-.main-read{
-	padding-right: 5px;
-	font-size: 9pt;
-}
+
+
+
 </style>

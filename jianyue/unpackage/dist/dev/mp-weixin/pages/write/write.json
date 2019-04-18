@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "u-parse": "/components/uParse/src/wxParse",
+    "qf-alert": "/components/qf-alert"
+  }
 }

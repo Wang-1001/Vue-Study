@@ -29,7 +29,7 @@
 				<!-- 大于等于三张图片的显示方式 -->
 				<view class="" v-if="article.imgs.length >= 3">
 					<view class="thumbnail-box">
-						<view class="thumbnail-item" v-for="(item, index) in article.imgs" :key="index">
+						<view class="thumbnail-item" v-for="(item, index1) in article.imgs" :key="index1" v-if="index1 < 3"  >
 							<image :src="item.imgUrl"></image>
 						</view>
 					</view>
@@ -39,7 +39,10 @@
 				<view class="" v-else-if="article.imgs.length >= 1">
 					<view class="text-img-box">
 						<view class="left">
-							<text>{{handleContent(article.content)}}</text>
+							
+							
+							<rich-text :nodes="(article.content)" bindtap="tap"></rich-text>
+							
 						</view>
 						<view class="right">
 							<image :src="article.imgs[article.imgs.length - 1].imgUrl"></image>
@@ -87,8 +90,14 @@
 export default {
 	data() {
 		return {
+			article: {
+					aId: 0,
+					title: '',
+					content: '',
+					nickname: '',
+					createTime: ''
+				},
 			articles: [],
-
 			recommend: true,
 			special: false,
 			serialize: false
@@ -117,6 +126,7 @@ export default {
 			this.special = false;
 			this.serialize = true;
 		},
+		
 		getArticles: function() {
 			var _this = this;
 			uni.request({
@@ -125,31 +135,34 @@ export default {
 				header: { 'content-type': 'application/x-www-form-urlencoded' },
 				success: res => {
 					_this.articles = res.data.data;
+					for (var i = 0; i < _this.articles.length; i++) {
+							_this.articles[i].createTime = this.handleTime(_this.articles[i].createTime);
+							_this.articles[i].content = this.handleContent(_this.articles[i].content);
+						}
 				},
 				complete: function() {
 					uni.stopPullDownRefresh();
 				}
 			});
 		},
+		
 		gotoDetail: function(aId) {
 			uni.navigateTo({
 				url: '../article_detail/article_detail?aId=' + aId
-			});
-		},
-		handleTime: function(date) {
-			var d = new Date(date);
-			var year = d.getFullYear();
-			var month = d.getMonth() + 1;
-			var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate();
-			var hour = d.getHours() < 10 ? '0' + d.getHours() : '' + d.getHours();
-			var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : '' + d.getMinutes();
-			var seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : '' + d.getSeconds();
-			return year + '-' + day + '' + hour + ':' + minutes + ':' + seconds;
+			})
 		},
 		
-		/* handleContent: function(msg) {
-			return msg.substring(0, 50);
-		} */
+		handleTime: function(date) {
+				var d = new Date(date);
+				var year = d.getFullYear();
+				var month = d.getMonth() + 1;
+				var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate();
+				var hour = d.getHours() < 10 ? '0' + d.getHours() : '' + d.getHours();
+				var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : '' + d.getMinutes();
+				var seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : '' + d.getSeconds();
+				return year + '-' + month + '-' + day + ' ' + hour + ":" + minutes + ':' + seconds
+			},
+		
 		handleContent: function(msg) {
 				let description = msg;
 				description = description.replace(/(\n)/g, "");
@@ -160,7 +173,7 @@ export default {
 				return msg.substring(0, 50);;
 			}
 	}
-};
+}
 </script>
 
 <style scoped>
@@ -175,8 +188,6 @@ export default {
 	font-size: 13pt;
 	font-weight: 700;
 }
-
-
 /* 大于三张 */	
 .thumbnail-box{
 	margin-top: 5px;
@@ -186,11 +197,14 @@ export default {
 	/* border: 1px solid #10AEFF; */
 }	
 .thumbnail-item{
+	margin-right: 5px;
+	
 	height: 100px;
 	flex: 1 1 30%;
 	/* border: 1px solid black; */
 }
 .thumbnail-item image{
+	border-radius: 10px;
 	width: 100%;
 	height: 100%;
 }
@@ -206,12 +220,12 @@ export default {
 	height: 100px;
 }	
 .right image{
+	border-radius: 10px;
 	height: 100%;
 	width: 100%;
 }	
 /* 无图 */
 	
-
 .article-text{
 	width: 100%;
 	/* border:  1px solid #000000; */
@@ -248,7 +262,6 @@ export default {
 	font-size: 11pt;
 	color: rgb(110, 110, 110)
 }
-
 	/* 顶部导航栏 */
 .container {
 	font-size: 13pt;

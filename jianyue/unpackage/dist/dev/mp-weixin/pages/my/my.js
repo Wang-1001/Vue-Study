@@ -98,146 +98,219 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var graceMaskView = function graceMaskView() {return __webpack_require__.e(/*! import() | graceUI/components/graceMaskView */ "graceUI/components/graceMaskView").then(__webpack_require__.bind(null, /*! ../../graceUI/components/graceMaskView.vue */ "../../../../Vue-Study/jianyue/graceUI/components/graceMaskView.vue"));};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 var loginRes, _self;var _default =
 {
   data: function data() {
     return {
+      storageData: {
+        userId: 0,
+        login: false },
 
-      storageData: {},
-      /* 111 */
+
+      /* storageData: {}, */
       avatar: '',
       nickname: '',
 
-      /* 111 */
-
-      articlenum: '10',
-      attention: '5',
-      information: '66',
-      integral: '122',
-      articles: [
+      //分类信息
+      categories: [
       {
-        id: 1,
-        headline: '第一篇文章' },
+        cateid: 0,
+        name: '文章' },
 
       {
-        id: 2,
-        headline: '第二篇文章' },
+        cateid: 1,
+        name: '关注' },
 
       {
-        id: 3,
-        headline: '第三篇文章' },
+        cateid: 2,
+        name: '收藏' },
 
       {
-        id: 4,
-        headline: '第四篇文章' }] };
+        cateid: 3,
+        name: '签到' }],
+
+
+      // 当前选择的分类
+      cateCurrentIndex: 0,
+      articles: [],
+      follows: [],
+
+
+      /* 遮罩层 */
+      staticUrl: this.staticUrl,
+      show: false,
+      show2: false };
 
 
 
   },
   onLoad: function onLoad() {},
-  /* onShow: function() {
-                                	
-                                	const loginKey = uni.getStorageSync('login_key');
-                                	console.log('come');
-                                	if (loginKey) {
-                                		console.log(loginKey);
-                                		this.storageData = {
-                                			login: loginKey.login,
-                                			nickname: loginKey.nickname,
-                                			avatar: loginKey.avatar
-                                		};
-                                	} else {
-                                		this.storageData = {
-                                			login: false
-                                		};
-                                	}
-                                }, */
   onShow: function onShow() {
     var _this = this;
     var loginKey = uni.getStorageSync('login_key');
 
     if (loginKey) {
-      // console.log(loginKey);
       this.storageData = {
         login: loginKey.login,
         nickname: loginKey.nickname,
-        avatar: loginKey.avatar };
+        avatar: loginKey.avatar,
+        userId: loginKey.userId };
+
+      /* uni.request({
+                                   	
+                                   	url: this.apiServer + '/article/user_count',
+                                   	method: 'GET',
+                                   	header: { 'content-type': 'application/x-www-form-urlencoded' },
+                                   	data: {
+                                   		userId: this.storageData.userId
+                                   	},
+                                   	success: res => {
+                                   		_this.articleCount = res.data.data;
+                                   	}
+                                   }); */
+      uni.request({
+        url: this.apiServer + '/article/user',
+        method: 'GET',
+        header: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: {
+          userId: this.storageData.userId },
+
+        success: function success(res) {
+          _this.articles = res.data.data;
+        } });
+
+      uni.request({
+        url: this.apiServer + '/follow/list',
+        method: 'GET',
+        header: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: {
+          fromUId: this.storageData.userId },
+
+        success: function success(res) {
+          _this.follows = res.data.data;
+        } });
 
     } else {
       this.storageData = {
         login: false };
 
     }
+
     uni.request({
       url: 'http://localhost:8080/api/user/' + uni.getStorageSync('login_key').userId,
       method: 'GET',
@@ -252,7 +325,60 @@ var loginRes, _self;var _default =
 
   },
 
-  methods: {} };exports.default = _default;
+  methods: {
+    handleTime: function handleTime(date) {
+      var d = new Date(date);
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate();
+      var hour = d.getHours() < 10 ? '0' + d.getHours() : '' + d.getHours();
+      var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : '' + d.getMinutes();
+      var seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : '' + d.getSeconds();
+      return year + '-' + month + '-' + day + ' ' + hour + ':' + minutes + ':' + seconds;
+    },
+    tabChange: function tabChange(e) {
+      // 选中的索引
+      var index = e.currentTarget.dataset.index;
+      // 具体的分类id
+      var cateid = e.currentTarget.dataset.cateid;
+      this.cateCurrentIndex = index;
+      // 动态替换内容
+      this.content = this.categories[index].name;
+    },
+    gotoDetail: function gotoDetail(aId) {
+      uni.navigateTo({
+        url: '../article_detail/article_detail?aId=' + aId + '&userId=' + this.storageData.userId });
+
+    },
+
+    /* 遮罩层 */
+    // 第1个演示 开启与关闭
+    showBanner: function showBanner() {
+      this.show = true;
+    },
+    closeBanner: function closeBanner() {
+      this.show = false;
+    },
+    // 第2个演示 开启与关闭
+    showBanner2: function showBanner2() {
+      this.show2 = true;
+    },
+    closeBanner2: function closeBanner2() {
+      this.show2 = false;
+    },
+    tap2: function tap2() {
+      uni.showToast({
+        title: "您点击了红包图片",
+        icon: "none" });
+
+    } },
+
+
+
+
+  /* 遮罩层 */
+  components: {
+    graceMaskView: graceMaskView } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
@@ -283,6 +409,21 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l0 = _vm.articles.map(function(article, index) {
+    var m0 = _vm.handleTime(article.createTime)
+    return {
+      $orig: _vm.__get_orig(article),
+      m0: m0
+    }
+  })
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -98,21 +98,296 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uParse = function uParse() {return Promise.all(/*! import() | components/uParse/src/wxParse */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/uParse/src/wxParse")]).then(__webpack_require__.bind(null, /*! ../../components/uParse/src/wxParse.vue */ "../../../../Vue-Study/jianyue/components/uParse/src/wxParse.vue"));};var qfAlert = function qfAlert() {return Promise.all(/*! import() | components/qf-alert */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/qf-alert")]).then(__webpack_require__.bind(null, /*! ../../components/qf-alert.vue */ "../../../../Vue-Study/jianyue/components/qf-alert.vue"));};var _default =
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+  name: "qf-editor",
+  components: {
+    uParse: uParse,
+    qfAlert: qfAlert },
+
+  data: function data() {
+    return {
+      myTextarea: '',
+      link: '',
+      imageLink: '',
+      isOpen: false,
+      isOpen2: false,
+      isOpen3: false,
+      isOpen4: false,
+      endOffset: 0,
+      startOffset: 0,
+      endContainer: '',
+      startContainer: '',
+      title: '',
+      content: '',
+      userId: uni.getStorageSync('login_key').userId,
+      imgs: [],
+      look: true,
+      followed: true };
+
+  },
+  props: {},
+
+
+  onLoad: function onLoad(option) {
+    uni.setNavigationBarTitle({
+      title: '写文章' });
+
+
+  },
+  methods: {
+    /* 选择图片上传方法 */
+    chooseImg: function chooseImg() {
+      var _this = this;
+      uni.chooseImage({
+        count: 1,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album'],
+        success: function success(res) {
+          console.log(JSON.stringify(res.tempFilePaths));
+          uni.uploadFile({
+            url: _this.apiServer + '/avatar/upload',
+            filePath: res.tempFilePaths[0],
+            name: 'file',
+            success: function success(uploadFileRes) {
+              //图片上传成功，回显图片地址
+              console.log(uploadFileRes.data);
+              //将图片地址加入imgs数组
+              _this.imgs.push(uploadFileRes.data);
+              //将图片地址拼接HTML标签，加入文章内容
+              _this.content += '<img src="' + uploadFileRes.data + '" width = "100%"/>';
+            } });
+
+        } });
+
+    },
+    changelook: function changelook() {
+      var _this = this;
+      _this.look = false;
+      _this.followed = false;
+    },
+    changelook1: function changelook1() {
+      var _this = this;
+      _this.look = true;
+      _this.followed = true;
+    },
+    /* 发布文章方法 */
+    postArticle: function postArticle() {var _this2 = this;
+      var _this = this;
+      uni.showLoading({
+        title: '发表中' });
+
+      uni.request({
+        url: this.apiServer + '/article/add',
+        method: 'POST',
+        header: {
+          'content-type': 'application/x-www-form-urlencoded' },
+
+        data: {
+          uId: this.userId,
+          title: this.title,
+          content: '<div>' + this.content + '</div>' },
+
+        success: function success(res) {
+          if (res.data.code === 0) {
+            //获得发布文章成功返回的文章id
+            var aId = res.data.data;
+            console.log(aId);
+            //将文章id和文章对应的图片地址数组传到后台，存入数据库
+            uni.request({
+              url: _this2.apiServer + '/img/add',
+              method: 'POST',
+              header: {
+                'content-type': 'application/x-www-form-urlencoded' },
+
+              data: {
+                aId: aId,
+                imgs: JSON.stringify(_this.imgs) //序列化imgs数组
+              },
+              success: function success(res) {
+                if (res.data.code === 0) {
+                  console.log('文章图片地址已写入数据库');
+                }
+              } });
+
+            uni.hideToast();
+            uni.showToast({
+              title: '发布成功',
+              duration: 5000 });
+
+            uni.switchTab({
+              url: '../index/index' });
+
+          }
+        } });
+
+    },
+    toolBarClick: function toolBarClick(type) {var _this3 = this;
+      if (type == 'bold') {
+        var bold = document.execCommand("bold", false, null);
+      } else if (type == "italic") {
+        document.execCommand("italic", false, null);
+      } else if (type == "header") {
+        uni.showActionSheet({
+          itemList: ["标题1", "标题2", "标题3", "标题4", "标题5", "标题6"],
+          success: function success(res) {
+            switch (res.tapIndex) {
+              case 0:
+                document.execCommand("fontsize", false, 1);
+                return;
+              case 1:
+                document.execCommand("fontsize", false, 2);
+                return;
+              case 2:
+                document.execCommand("fontsize", false, 3);
+                return;
+              case 3:
+                document.execCommand("fontsize", false, 4);
+                return;
+              case 4:
+                document.execCommand("fontsize", false, 5);
+                return;
+              case 5:
+                document.execCommand("fontsize", false, 6);
+                return;}
+
+          } });
+
+      } else if (type == "underline") {
+        alert("ok");
+        document.execCommand("underline", false, null);
+      } else if (type == "strike") {
+        document.execCommand("strikeThrough", false, null);
+      } else if (type == "alignleft") {
+        document.execCommand("justifyLeft", false, null);
+      } else if (type == "aligncenter") {
+        document.execCommand("justifyCenter", false, null);
+      } else if (type == "alignright") {
+        document.execCommand("justifyRight", false, null);
+      } else if (type == "link") {
+        var selection = document.getSelection();
+        console.log(selection.getRangeAt(0));
+        if (selection.type == "Range") {
+          var range = selection.getRangeAt(0);
+          this.endOffset = range.endOffset;
+          this.startOffset = range.startOffset;
+          this.endContainer = range.endContainer;
+          this.startContainer = range.startContainer;
+          this.isOpen = 'true';
+        } else {
+          this.isOpen2 = 'true';
+        }
+      } else if (type == "imgage") {
+        //document.execCommand("insertimage", false, "http://dinxin.suchenqiang.cn/public/upload/image/20190402/59310adb40594ae1fbdb5dd1fd009a15.jpg")
+        var _selection = document.getSelection();
+        console.log(_selection);
+        if (_selection.type != "None") {
+          this.isOpen4 = 'true';
+        }
+      } else if (type == "clear") {
+        uni.showModal({
+          title: "提示",
+          content: "确定清空?",
+          cancelText: '点错了',
+          cancelColor: '#EA6F5A',
+          success: function success(res) {
+            if (res.confirm) {
+              _this3.content = "";
+              _this3.title = "";
+            }
+          } });
+
+      } else if (type == "submit") {
+        if (this.content != '') {
+          /* alert(this.myTextarea.target.innerHTML); */
+          /* console.log(this.myTextarea.target.innerHTML); */
+          uni.showToast({
+            title: '保存成功！' });
+
+        } else {
+          uni.showModal({
+            title: "提示",
+            content: "文章内容为空！" });
+
+        }
+      }
+    },
+    closeAlert: function closeAlert() {
+      this.isOpen = false;
+    },
+    closeImageAlert: function closeImageAlert() {
+      this.isOpen4 = false;
+      this.$refs.qfAlert.imageLink = '';
+    },
+    closeTip: function closeTip() {
+      this.isOpen2 = false;
+    },
+    closeClean: function closeClean() {
+      this.isOpen3 = false;
+    },
+    submitLink: function submitLink(data) {
+      this.link = this.$refs.qfAlert_ipt.link;
+      this.isOpen = false;
+      var selection = window.getSelection();
+      var range = document.createRange();
+      selection.removeAllRanges();
+      range.setStart(this.startContainer, this.startOffset);
+      range.setEnd(this.endContainer, this.endOffset);
+      selection.addRange(range);
+      document.execCommand("createlink", false, this.link);
+    },
+    submitImageLink: function submitImageLink(data) {
+      this.isOpen4 = false;
+      this.imageLink = this.$refs.qfAlert.imageLink;
+      document.execCommand('insertHTML', false, "<image style='width:80%' src='" + this.imageLink + "'></image>");
+      this.$refs.qfAlert.imageLink = '';
+    },
+    isClean: function isClean() {
+      this.closeClean();
+      if (this.myTextarea != '') {
+        this.myTextarea.target.innerHTML = "";
+      }
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
 

@@ -183,12 +183,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var _default =
 {
   data: function data() {
     return {
-      articles: [],
+      article: {
+        aId: 0,
+        title: '',
+        content: '',
+        nickname: '',
+        createTime: '' },
 
+      articles: [],
       recommend: true,
       special: false,
       serialize: false };
@@ -217,7 +226,8 @@ var _default =
       this.special = false;
       this.serialize = true;
     },
-    getArticles: function getArticles() {
+
+    getArticles: function getArticles() {var _this2 = this;
       var _this = this;
       uni.request({
         url: this.apiServer + '/article/list',
@@ -225,17 +235,23 @@ var _default =
         header: { 'content-type': 'application/x-www-form-urlencoded' },
         success: function success(res) {
           _this.articles = res.data.data;
+          for (var i = 0; i < _this.articles.length; i++) {
+            _this.articles[i].createTime = _this2.handleTime(_this.articles[i].createTime);
+            _this.articles[i].content = _this2.handleContent(_this.articles[i].content);
+          }
         },
         complete: function complete() {
           uni.stopPullDownRefresh();
         } });
 
     },
+
     gotoDetail: function gotoDetail(aId) {
       uni.navigateTo({
         url: '../article_detail/article_detail?aId=' + aId });
 
     },
+
     handleTime: function handleTime(date) {
       var d = new Date(date);
       var year = d.getFullYear();
@@ -244,12 +260,9 @@ var _default =
       var hour = d.getHours() < 10 ? '0' + d.getHours() : '' + d.getHours();
       var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : '' + d.getMinutes();
       var seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : '' + d.getSeconds();
-      return year + '-' + day + '' + hour + ':' + minutes + ':' + seconds;
+      return year + '-' + month + '-' + day + ' ' + hour + ":" + minutes + ':' + seconds;
     },
 
-    /* handleContent: function(msg) {
-       	return msg.substring(0, 50);
-       } */
     handleContent: function handleContent(msg) {
       var description = msg;
       description = description.replace(/(\n)/g, "");
@@ -291,13 +304,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   var l0 = _vm.articles.map(function(article, index) {
     var m0 = _vm.handleContent(article.content)
-    var m1 = _vm.handleContent(article.content)
-    var m2 = _vm.handleTime(article.createTime)
+    var m1 = _vm.handleTime(article.createTime)
     return {
       $orig: _vm.__get_orig(article),
       m0: m0,
-      m1: m1,
-      m2: m2
+      m1: m1
     }
   })
   _vm.$mp.data = Object.assign(

@@ -98,7 +98,17 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -137,56 +147,26 @@ var _default =
     return {
       showall: true,
       searchstr: '',
+      article: {
 
-      msgs: [
-      {
-        id: 1,
-        title: '每个互联网创业者都应该了解的：10项早起做产品的原则',
-        reading: '141' },
+        aId: 0,
+        title: '',
+        content: '',
+        nickname: '',
+        createTime: '' },
 
-      {
-        id: 2,
-        title: '有趣或无趣。充实或乏味，全在你一念之间',
-        reading: '301' },
-
-      {
-        id: 3,
-        title: '人性中的6大怪物，太多现代人沉迷其中，不自知！',
-        reading: '474' },
-
-      {
-        id: 4,
-        title: '中老年人一定要坚守8大防线',
-        reading: '741' },
-
-      {
-        id: 5,
-        title: '自然的教育--用布道者的虔诚去传播美的感动',
-        reading: '8465' },
-
-      {
-        id: 6,
-        title: '詹宁斯诗歌四首，感受不一样的心灵疗救之歌',
-        reading: '321' },
-
-      {
-        id: 7,
-        title: '每个互联网创业者都应该了解的：10项早起做产品的原则',
-        reading: '855' },
-
-      {
-        id: 8,
-        title: '每个互联网创业者都应该了解的：10项早起做产品的原则',
-        reading: '1267' },
-
-      {
-        id: 9,
-        title: '每个互联网创业者都应该了解的：10项早起做产品的原则',
-        reading: '874' }] };
-
+      articles: [] };
 
 
   },
+  onLoad: function onLoad() {
+    this.getArticles();
+  },
+  onShow: function onShow() {},
+  onPullDownRefresh: function onPullDownRefresh() {
+    this.getArticles();
+  },
+
   computed: {
     filterArticles: function filterArticles() {
       var filterArray = this.msgs;
@@ -207,7 +187,58 @@ var _default =
         //最终的过滤数组
         return filterArray;
       }
+    } },
+
+
+  methods: {
+
+
+    getArticles: function getArticles() {var _this2 = this;
+      var _this = this;
+      uni.request({
+        url: this.apiServer + '/article/list',
+        method: 'GET',
+        header: { 'content-type': 'application/x-www-form-urlencoded' },
+        success: function success(res) {
+          _this.articles = res.data.data;
+          for (var i = 0; i < _this.articles.length; i++) {
+            _this.articles[i].createTime = _this2.handleTime(_this.articles[i].createTime);
+            _this.articles[i].content = _this2.handleContent(_this.articles[i].content);
+          }
+        },
+        complete: function complete() {
+          uni.stopPullDownRefresh();
+        } });
+
+    },
+
+    gotoDetail: function gotoDetail(aId) {
+      uni.navigateTo({
+        url: '../article_detail/article_detail?aId=' + aId });
+
+    },
+
+    handleTime: function handleTime(date) {
+      var d = new Date(date);
+      var year = d.getFullYear();
+      var month = d.getMonth() + 1;
+      var day = d.getDate() < 10 ? '0' + d.getDate() : '' + d.getDate();
+      var hour = d.getHours() < 10 ? '0' + d.getHours() : '' + d.getHours();
+      var minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : '' + d.getMinutes();
+      var seconds = d.getSeconds() < 10 ? '0' + d.getSeconds() : '' + d.getSeconds();
+      return year + '-' + month + '-' + day + ' ' + hour + ":" + minutes + ':' + seconds;
+    },
+
+    handleContent: function handleContent(msg) {
+      var description = msg;
+      description = description.replace(/(\n)/g, "");
+      description = description.replace(/(\t)/g, "");
+      description = description.replace(/(\r)/g, "");
+      description = description.replace(/<\/?[^>]*>/g, "");
+      description = description.replace(/\s*/g, "");
+      return msg.substring(0, 50);;
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["default"]))
 
 /***/ }),
 

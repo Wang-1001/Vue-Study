@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>websocket示例</title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+<style type="text/css">
+	
+</style>
+	
+	<body>
+		<div id="app">
+			<div class="top">
+				消息显示
+			</div>
+			
+			<!-- <h3>消息显示</h3> -->
+			<ul>
+				<li v-for="(message, index) in messages" :key="index">
+					{{message}}
+				</li>
+			</ul>
+			<hr>
+			<h3>发送消息 </h3>
+			<input type="text" v-model="sendMsg" />
+			<button type="button" @click="send();showNotification()" >发送</button>
+			
+		</div>
+		
+		
+		<script type="text/javascript">
+			var socket;
+			var app = new Vue({
+				el: '#app',
+				data: {
+					messages: [],
+					sendMsg: ''
+				},
+				created: function() {
+					var _this = this;
+					//创建WebSocket对象，指定要连接的服务器地址和端口，建立连接
+					socket = new WebSocket("ws://192.168.43.39:8080/websocket");
+						
+					//打开连接
+					socket.onopen = function() {
+						console.log("Socket已打开");
+
+					};
+					//获得服务端推送的消息
+					socket.onmessage = function(msg) {
+						console.log(msg.data);
+						_this.messages.push(msg.data);
+						console.log(_this.messages);
+					};
+					//关闭连接
+					socket.onclose = function() {
+						console.log("Socket已关闭");
+					};
+					//发送错误
+					socket.onerror = function() {
+						alert("Socket发生了错误");
+					}
+				},
+				watch: {
+					// 如果 `messages` 发生改变，这个函数就会运行
+					messages: function(newMsg, oldMsg) {
+						var n = new Notification('Title',{
+							body :newMsg[newMsg.length - 1]
+						});
+
+					},
+				},
+				methods: {
+					send: function() {
+						socket.send(this.sendMsg);
+					},
+					showNotification:function() {
+						window.Notification.permission = "granted";						
+						if (window.Notification) {
+							if (window.Notification.permission == "granted") {
+								var notification = new Notification('您有一条新消息通知！', {
+									body: this.sendMsg,
+									icon: "图标路径，若不指定默认为favicon"
+								});
+								setTimeout(function() {
+									notification.close();
+								}, 5000);
+							} else {
+								window.Notification.requestPermission();
+							}
+						} else alert('你的浏览器不支持此消息提示功能，请使用chrome内核的浏览器！');
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

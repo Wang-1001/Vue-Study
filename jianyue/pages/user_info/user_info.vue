@@ -1,19 +1,27 @@
 <template>
 	<view class="container">
 		<view class="list">
-			<view class="list-item list-item-heigher">
-				<view class="left">昵称</view>
+			<navigator url="../name_info/name_info">
+				<view class="list-item list-item-heigher">
+					<view class="left">昵称</view>
 
-				<view class="right">
-					<navigator url="../name_info/name_info">{{ nickname }}</navigator>
+					<view class="right">{{ nickname }}</view>
+					<view class="list-img">
+						<image src="../../static/yjt.png"></image>
+					</view>
 				</view>
-			</view>
-			<view class="list-item list-item-heigher">
+			</navigator>
+			<view class="list-item list-item-heigher" @tap="showActionSheet">
 				<view class="left">头像</view>
-				<view class="right2"><image :src="avatar" class="avatar" @tap="showActionSheet"></image></view>
+				<view class="right2"><image :src="avatar" class="avatar" ></image></view>
 			</view>
 			<navigator url="../password_info/password_info">
-				<view class="list-item list-item-heigher"><view class="left">修改密码</view></view>
+				<view class="list-item list-item-heigher">
+					<view class="left">修改密码</view>
+					<view class="list-img">
+						<image src="../../static/yjt.png"></image>
+					</view>
+				</view>
 			</navigator>
 		</view>
 	</view>
@@ -118,9 +126,11 @@ export default {
 </script>
 
 <style>
+	
 .list-item-heigher {
 	height: 60px;
 	display: flex;
+	align-items: center;
 }
 .left {
 	flex: 1 1 30%;
@@ -129,7 +139,7 @@ export default {
 	/* border: 1px solid #007AFF; */
 }
 .right {
-	margin-top: 20px;
+	
 	flex: 1 1 70%;
 	display: flex;
 	justify-content: center;
@@ -142,5 +152,15 @@ export default {
 	flex: 1 1 70%;
 	display: flex;
 	justify-content: center;
+}
+
+.list-img{
+	margin-right: 5px;
+}
+.list-img image {
+	height: 18px;
+	width: 18px;
+	display: flex;
+	align-items: center;
 }
 </style>
