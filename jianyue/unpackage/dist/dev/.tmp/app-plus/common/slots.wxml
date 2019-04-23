@@ -1,0 +1,21 @@
+<import src="/graceUI/components/graceMaskView.vue.wxml" />
+<import src="/components/qf-alert.vue.wxml" />
+<import src="/common/slots.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate0.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate1.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseVideo.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseAudio.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseImg.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate2.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate3.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate4.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate5.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate6.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate7.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate8.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate9.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate10.vue.wxml" />
+<import src="/components/uParse/src/components/wxParseTemplate11.vue.wxml" />
+
+<template name="data-v-a7ed9972-default-4339f154-1"><view class="_view data-v-a7ed9972"><image src="../../static/12.jpg" style="width:100%; margin-top:25px; border-top-right-radius:5px; border-top-left-radius:5px;" mode="widthFix" class="_image data-v-a7ed9972"></image></view><view style="padding:25px; padding-bottom:30px;" class="_view data-v-a7ed9972"><button type="warn" style="background:#F6644D; padding:0 20px;" bindtap="handleProxy" data-eventid="{{'4339f154-3'}}" data-comkey="{{$k}}" class="_button data-v-a7ed9972">签到成功</button></view></template>
+

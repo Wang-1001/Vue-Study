@@ -18,7 +18,7 @@
 		{
 			"path": "pages/my/my",
 			"style": {
-				"navigationBarTitleText": "我的"
+				
 			}
 		},
 		{
@@ -50,7 +50,7 @@
         {
         	"path": "pages/user_info/user_info",
         	"style": {
-        		"navigationBarTitleText": "个人资料设置",
+        		"navigationBarTitleText": "编辑个人资料",
         		"enablePullDownRefresh": true
         
         	}
@@ -90,7 +90,9 @@
 		},
 		{
             "path" : "pages/name_info/name_info",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "更改昵称"
+			}
         },
 		{
 		    "path" : "pages/signup/signup",

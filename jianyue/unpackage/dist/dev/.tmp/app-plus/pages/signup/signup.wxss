@@ -1,0 +1,50 @@
+
+input.data-v-5c1ba847 {
+	height: 50px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 5px;
+}
+/* 手机验证码注册 */
+.top-headline.data-v-5c1ba847{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	font-size: 15pt;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+/* 文本输入 */
+.auth-code.data-v-5c1ba847{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	border: 1px solid #000000;
+}
+.message.data-v-5c1ba847 {
+	width: 150px;
+	background-color: rgb(233, 111, 90);
+	height: 47px;
+	color: #ffffff;
+	outline: none;
+	border-radius: 30px;
+	margin-right: -180px;
+	border: 1px solid #007AFF;
+}
+
+
+
+

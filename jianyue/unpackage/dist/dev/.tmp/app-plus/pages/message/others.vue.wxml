@@ -1,0 +1,1 @@
+<template name="94e620b4"><view class="_view 94e620b4 container"><view class="_view 94e620b4 content" wx:key="index" key="{{index}}" wx:for="{{others}}" wx:for-index="index" wx:for-item="other"><view class="_view 94e620b4 others-content">{{other.content}}</view><view class="_view 94e620b4 others-time">{{other.time}}</view></view></view></template>

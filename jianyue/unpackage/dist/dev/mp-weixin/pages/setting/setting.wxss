@@ -1,26 +1,29 @@
 
-.list {
-	margin-top: 5px;
+.container.data-v-2f184ae9 {
+	width: 100%;
 }
-.option {
-	margin-bottom: 10px;
+.option.data-v-2f184ae9 {
+	
+	background: rgb(252, 252, 252);
+}
+.option-list.data-v-2f184ae9 {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-pack: justify;
-	-webkit-justify-content: space-between;
-	    -ms-flex-pack: justify;
-	        justify-content: space-between;
 	-webkit-box-align: center;
 	-webkit-align-items: center;
 	    -ms-flex-align: center;
 	        align-items: center;
+	height: 35px;
+	width: 100%;
+	color: rgb(233, 111, 90);
+}
+.list-words.data-v-2f184ae9 {
+	font-size: 9pt;
 	margin-left: 5px;
 }
-.list-item {
-	height: 30px;
-	margin-top: 5px;
+.list-item.data-v-2f184ae9{
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -29,14 +32,14 @@
 	-webkit-align-items: center;
 	    -ms-flex-align: center;
 	        align-items: center;
-	/* border: 1px solid #007AFF; */
+	height: 60px;
 }
-.list-img{
-	margin-right: 5px;
+.list-word.data-v-2f184ae9 {
+	font-size: 14pt;
+	margin-left: 5px;
 }
-.list-img image {
-	height: 18px;
-	width: 18px;
+/* 退出当前账号 */
+.secede.data-v-2f184ae9 {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -45,5 +48,13 @@
 	-webkit-align-items: center;
 	    -ms-flex-align: center;
 	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	width: 80%;
+	border-radius: 30px;
+	background-color: rgb(233, 111, 90);
+	color: #ffffff;
 }
 

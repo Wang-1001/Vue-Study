@@ -1,0 +1,2 @@
+setCssToHead(["wx-input.",[1],"data-v-09fdb907 { height: 50px; border-bottom: 1px solid #eee; margin-bottom: 5px; }\n.",[1],"nav.",[1],"data-v-09fdb907 { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -webkit-justify-content: center; -ms-flex-pack: center; justify-content: center; color: #00b26a; margin-top: 15px; }\n",],undefined,{path:"./pages/signin/signin.wxss"})();
+document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/signin/signin.wxml') } }));

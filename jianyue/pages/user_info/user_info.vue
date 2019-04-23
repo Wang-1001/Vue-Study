@@ -1,26 +1,77 @@
 <template>
 	<view class="container">
 		<view class="list">
-			<navigator url="../name_info/name_info">
-				<view class="list-item list-item-heigher">
-					<view class="left">昵称</view>
+			<view class="list-title"><view class="title-words">常规设置</view></view>
 
-					<view class="right">{{ nickname }}</view>
-					<view class="list-img">
-						<image src="../../static/yjt.png"></image>
+			<view class="list-item-heigher" @tap="showActionSheet">
+				<view class="left">更换头像</view>
+				<view class="right2"><image :src="avatar" class="avatar"></image></view>
+			</view>
+			<navigator url="../name_info/name_info">
+				<view class="list-item-heigher">
+					<view class="left">更改昵称</view>
+					<view class="right">
+						{{ nickname }}
+						<view class="list-img"><image src="../../static/yjt.png"></image></view>
 					</view>
 				</view>
 			</navigator>
-			<view class="list-item list-item-heigher" @tap="showActionSheet">
-				<view class="left">头像</view>
-				<view class="right2"><image :src="avatar" class="avatar" ></image></view>
+			<view class="list-item-heigher">
+				<view class="left">更改性别</view>
+				<!-- <view class="right">{{ sex }}</view> -->
+				<view class="right">男</view>
 			</view>
+			<view class="list-item-heigher">
+				<view class="left">更改生日</view>
+				<!-- <view class="right">{{ birthday }}</view> -->
+				<view class="right">1998-10-01</view>
+			</view>
+			<view class="list-item-heigher"><view class="left">更改主页</view></view>
+			<view class="list-item-heigher">
+				<view class="left">个人简介</view>
+				<!-- <view class="right">{{ individual }}</view> -->
+				<view class="right">呆若木鸡的猪</view>
+			</view>
+
+			<view class="list-title"><view class="title-words">绑定账号登录简书</view></view>
+			<view class="title-words-a"><view class="title-words-b">出于安全因素，你至少需要保留一种登录方式</view></view>
+			
+			<view class="list-box">
+				<view class="list-left"><image src="../../static/sj.png"></image></view>
+				<view class="list-right">151****3716</view>
+			</view>
+			<view class="list-box">
+				<view class="list-left"><image src="../../static/wb.png"></image></view>
+				<view class="list-right">Beast-1998</view>
+			</view>
+			<view class="list-box">
+				<view class="list-left"><image src="../../static/wx.png"></image></view>
+				<view class="list-right">ABC</view>
+			</view>
+			<view class="list-box">
+				<view class="list-left"><image src="../../static/qq.png"></image></view>
+				<view class="list-right">已绑定</view>
+			</view>
+			<view class="list-box">
+				<view class="list-left"><image src="../../static/db.png"></image></view>
+				<view class="list-right">未绑定</view>
+			</view>
+			
+			<view class="a"></view>
+
 			<navigator url="../password_info/password_info">
-				<view class="list-item list-item-heigher">
-					<view class="left">修改密码</view>
-					<view class="list-img">
-						<image src="../../static/yjt.png"></image>
-					</view>
+				<view class="list-item-heigher"><view class="left">社交账号是否显示在主页</view></view>
+			</navigator>
+			<view class="a"></view>
+			<navigator url="../password_info/password_info">
+				<view class="list-item-heigher"><view class="left">绑定账号遇到问题</view></view>
+			</navigator>
+			<view class="a"></view>
+
+			<navigator url="../password_info/password_info">
+				<view class="list-item-heigher">
+					<view class="left">重置密码</view>
+					<view class="list-img"><image src="../../static/yjt.png"></image></view>
 				</view>
 			</navigator>
 		</view>
@@ -32,6 +83,11 @@ export default {
 	data() {
 		return {
 			/* 1111 */
+			sex: '',
+			birthday: '',
+			homepage: '',
+			individual: '',
+
 			nickname: '',
 			avatar: '',
 			/* 111 */
@@ -125,42 +181,97 @@ export default {
 };
 </script>
 
-<style>
-	
+<style scoped>
+.container {
+	width: 100%;
+	background: rgb(255, 255, 255);
+}
+.list-title {
+	width: 100%;
+	height: 35px;
+	display: flex;
+	align-items: center;
+	background: rgb(252, 252, 252);
+}
+.title-words {
+	margin-left: 5px;
+	font-size: 9pt;
+	color: rgb(233, 111, 90);
+}
 .list-item-heigher {
 	height: 60px;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid rgb(241, 241, 241);
+	border-top: 1px solid rgb(241, 241, 241);
 }
 .left {
-	flex: 1 1 30%;
-	margin-top: 20px;
+	display: flex;
+	align-items: center;
 	margin-left: 5px;
+	font-size: 14pt;
 	/* border: 1px solid #007AFF; */
 }
+.right2 {
+	margin-right: 10px;
+	display: flex;
+	justify-content: center;
+}
 .right {
-	
-	flex: 1 1 70%;
 	display: flex;
 	justify-content: center;
 	font-size: 10pt;
 	font-weight: 200;
 	font-style: italic;
-	/* border: 1px solid #DE533A; */
+	margin-right: 10px;
+	/* border: 1px solid #007aff; */
 }
-.right2 {
-	flex: 1 1 70%;
-	display: flex;
-	justify-content: center;
-}
-
-.list-img{
+.list-img {
 	margin-right: 5px;
+	margin-left: 10px;
 }
 .list-img image {
-	height: 18px;
-	width: 18px;
+	height: 20px;
+	width: 20px;
 	display: flex;
 	align-items: center;
+}
+.title-words-a {
+	background: rgb(252, 252, 252);
+	margin-bottom: 10px;
+}
+.title-words-b {
+	margin-left: 5px;
+	font-size: 9pt;
+	color: rgb(180, 180, 180);
+	margin-bottom: 10px;
+}
+.list-box{
+	display: flex;
+	height: 60px;
+	border-bottom: 1px solid rgb(241, 241, 241);
+	border-top: 1px solid rgb(241, 241, 241);
+}
+.list-left{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 5px;
+	margin-right: 20px;
+}
+.list-left image {
+	height: 30px;
+	width: 30px;
+}
+.list-right{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14pt;
+}
+.a{
+	height: 20px;
+	background: rgb(252, 252, 252);
 }
 </style>

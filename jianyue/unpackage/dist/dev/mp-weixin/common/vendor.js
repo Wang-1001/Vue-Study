@@ -1170,8 +1170,6 @@ var SYNC_API_RE = /requireNativePlugin|upx2px|hideKeyboard|canIUse|^create|Sync$
 
 var CONTEXT_API_RE = /^create|Manager$/;
 
-var TASK_APIS = ['request', 'downloadFile', 'uploadFile', 'connectSocket'];
-
 var CALLBACK_API_RE = /^on/;
 
 function isContextApi(name) {
@@ -1185,10 +1183,6 @@ function isCallbackApi(name) {
   return CALLBACK_API_RE.test(name);
 }
 
-function isTaskApi(name) {
-  return TASK_APIS.indexOf(name) !== -1;
-}
-
 function handlePromise(promise) {
   return promise.then(function (data) {
     return [null, data];
@@ -1200,8 +1194,7 @@ function shouldPromise(name) {
   if (
   isContextApi(name) ||
   isSyncApi(name) ||
-  isCallbackApi(name) ||
-  isTaskApi(name))
+  isCallbackApi(name))
   {
     return false;
   }
@@ -1306,7 +1299,7 @@ function processArgs(methodName, fromArgs) {var argsOption = arguments.length > 
         } else if (isPlainObject(keyOption)) {// {name:newName,value:value}可重新指定参数 key:value
           toArgs[keyOption.name ? keyOption.name : key] = keyOption.value;
         }
-      } else if (CALLBACKS.includes(key)) {
+      } else if (CALLBACKS.indexOf(key) !== -1) {
         toArgs[key] = processCallback(methodName, fromArgs[key], returnValue);
       } else {
         if (!keepFromArgs) {
@@ -1421,8 +1414,8 @@ var api = /*#__PURE__*/Object.freeze({});
 
 
 
-var WXPage = Page;
-var WXComponent = Component;
+var MPPage = Page;
+var MPComponent = Component;
 
 var customizeRE = /:/g;
 
@@ -1431,12 +1424,15 @@ var customize = cached(function (str) {
 });
 
 function initTriggerEvent(mpInstance) {
-  if (wx.canIUse('nextTick')) {// 微信旧版本基础库不支持重写triggerEvent
-    var oldTriggerEvent = mpInstance.triggerEvent;
-    mpInstance.triggerEvent = function (event) {for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {args[_key2 - 1] = arguments[_key2];}
-      return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
-    };
+  {
+    if (!wx.canIUse('nextTick')) {
+      return;
+    }
   }
+  var oldTriggerEvent = mpInstance.triggerEvent;
+  mpInstance.triggerEvent = function (event) {for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {args[_key2 - 1] = arguments[_key2];}
+    return oldTriggerEvent.apply(mpInstance, [customize(event)].concat(args));
+  };
 }
 
 Page = function Page() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -1452,7 +1448,7 @@ Page = function Page() {var options = arguments.length > 0 && arguments[0] !== u
       return oldHook.apply(this, args);
     };
   }
-  return WXPage(options);
+  return MPPage(options);
 };
 
 var behavior = Behavior({
@@ -1463,14 +1459,36 @@ var behavior = Behavior({
 
 Component = function Component() {var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   (options.behaviors || (options.behaviors = [])).unshift(behavior);
-  return WXComponent(options);
+  return MPComponent(options);
 };
 
-var MOCKS = ['__route__', '__wxExparserNodeId__', '__wxWebviewId__'];
+var mocks = ['__route__', '__wxExparserNodeId__', '__wxWebviewId__'];
 
-function initMocks(vm) {
+function triggerLink(mpInstance, vueOptions) {
+  mpInstance.triggerEvent('__l', mpInstance.$vm || vueOptions, {
+    bubbles: true,
+    composed: true });
+
+}
+
+function handleLink(event) {
+  if (event.detail.$mp) {// vm
+    if (!event.detail.$parent) {
+      event.detail.$parent = this.$vm;
+      event.detail.$parent.$children.push(event.detail);
+
+      event.detail.$root = this.$vm.$root;
+    }
+  } else {// vueOptions
+    if (!event.detail.parent) {
+      event.detail.parent = this.$vm;
+    }
+  }
+}
+
+function initMocks(vm, mocks) {
   var mpInstance = vm.$mp[vm.mpType];
-  MOCKS.forEach(function (mock) {
+  mocks.forEach(function (mock) {
     if (hasOwn(mpInstance, mock)) {
       vm[mock] = mpInstance[mock];
     }
@@ -1493,7 +1511,7 @@ function getData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1502,6 +1520,10 @@ function getData(vueOptions, context) {
       // 对 data 格式化
       data = JSON.parse(JSON.stringify(data));
     } catch (e) {}
+  }
+
+  if (!isPlainObject(data)) {
+    data = {};
   }
 
   Object.keys(methods).forEach(function (methodName) {
@@ -1523,9 +1545,65 @@ function createObserver(name) {
   };
 }
 
-function getProperties(props) {
-  var properties = {
-    vueSlots: { // 小程序不能直接定义 $slots 的 props，所以通过 vueSlots 转换到 $slots
+function getBehaviors(vueOptions) {
+  var vueBehaviors = vueOptions['behaviors'];
+  var vueExtends = vueOptions['extends'];
+  var vueMixins = vueOptions['mixins'];
+
+  var vueProps = vueOptions['props'];
+
+  if (!vueProps) {
+    vueOptions['props'] = vueProps = [];
+  }
+
+  var behaviors = [];
+  if (Array.isArray(vueBehaviors)) {
+    vueBehaviors.forEach(function (behavior) {
+      behaviors.push(behavior.replace('uni://', "wx".concat("://")));
+      if (behavior === 'uni://form-field') {
+        if (Array.isArray(vueProps)) {
+          vueProps.push('name');
+          vueProps.push('value');
+        } else {
+          vueProps['name'] = String;
+          vueProps['value'] = null;
+        }
+      }
+    });
+  }
+  if (isPlainObject(vueExtends) && vueExtends.props) {
+    behaviors.push(
+    Behavior({
+      properties: getProperties(vueExtends.props, true) }));
+
+
+  }
+  if (Array.isArray(vueMixins)) {
+    vueMixins.forEach(function (vueMixin) {
+      if (isPlainObject(vueMixin) && vueMixin.props) {
+        behaviors.push(
+        Behavior({
+          properties: getProperties(vueMixin.props, true) }));
+
+
+      }
+    });
+  }
+  return behaviors;
+}
+
+function parsePropType(key, type, defaultValue, file) {
+  // [String]=>String
+  if (Array.isArray(type) && type.length === 1) {
+    return type[0];
+  }
+  return type;
+}
+
+function getProperties(props) {var isBehavior = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;var file = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+  var properties = {};
+  if (!isBehavior) {
+    properties.vueSlots = { // 小程序不能直接定义 $slots 的 props，所以通过 vueSlots 转换到 $slots
       type: null,
       value: [],
       observer: function observer(newVal, oldVal) {
@@ -1536,9 +1614,9 @@ function getProperties(props) {
         this.setData({
           $slots: $slots });
 
-      } } };
+      } };
 
-
+  }
   if (Array.isArray(props)) {// ['title']
     props.forEach(function (key) {
       properties[key] = {
@@ -1554,14 +1632,18 @@ function getProperties(props) {
         if (isFn(value)) {
           value = value();
         }
+
+        opts.type = parsePropType(key, opts.type, value, file);
+
         properties[key] = {
-          type: PROP_TYPES.includes(opts.type) ? opts.type : null,
+          type: PROP_TYPES.indexOf(opts.type) !== -1 ? opts.type : null,
           value: value,
           observer: createObserver(key) };
 
       } else {// content:String
+        var type = parsePropType(key, opts, null, file);
         properties[key] = {
-          type: PROP_TYPES.includes(opts) ? opts : null,
+          type: PROP_TYPES.indexOf(type) !== -1 ? type : null,
           observer: createObserver(key) };
 
       }
@@ -1571,6 +1653,11 @@ function getProperties(props) {
 }
 
 function wrapper$1(event) {
+  // TODO 又得兼容 mpvue 的 mp 对象
+  try {
+    event.mp = JSON.parse(JSON.stringify(event));
+  } catch (e) {}
+
   event.stopPropagation = noop;
   event.preventDefault = noop;
 
@@ -1579,9 +1666,6 @@ function wrapper$1(event) {
   if (!hasOwn(event, 'detail')) {
     event.detail = {};
   }
-
-  // TODO 又得兼容 mpvue 的 mp 对象
-  event.mp = event;
 
   if (isPlainObject(event.detail)) {
     event.target = Object.assign({}, event.target, event.detail);
@@ -1627,7 +1711,7 @@ function getExtraValue(vm, dataPathsArray) {
   return context;
 }
 
-function processEventExtra(vm, extra) {
+function processEventExtra(vm, extra, event) {
   var extraObj = {};
 
   if (Array.isArray(extra) && extra.length) {
@@ -1647,7 +1731,13 @@ function processEventExtra(vm, extra) {
         if (!dataPath) {// model,prop.sync
           extraObj['$' + index] = vm;
         } else {
-          extraObj['$' + index] = vm.__get_value(dataPath);
+          if (dataPath === '$event') {// $event
+            extraObj['$' + index] = event;
+          } else if (dataPath.indexOf('$event.') === 0) {// $event.target.value
+            extraObj['$' + index] = vm.__get_value(dataPath.replace('$event.', ''), event);
+          } else {
+            extraObj['$' + index] = vm.__get_value(dataPath);
+          }
         }
       } else {
         extraObj['$' + index] = getExtraValue(vm, dataPath);
@@ -1656,6 +1746,15 @@ function processEventExtra(vm, extra) {
   }
 
   return extraObj;
+}
+
+function getObjByArray(arr) {
+  var obj = {};
+  for (var i = 1; i < arr.length; i++) {
+    var element = arr[i];
+    obj[element[0]] = element[1];
+  }
+  return obj;
 }
 
 function processEventArgs(vm, event) {var args = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];var extra = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];var isCustom = arguments.length > 4 ? arguments[4] : undefined;var methodName = arguments.length > 5 ? arguments[5] : undefined;
@@ -1668,11 +1767,11 @@ function processEventArgs(vm, event) {var args = arguments.length > 2 && argumen
       if (isCustomMPEvent) {
         return [event];
       }
-      return event.detail;
+      return event.detail.__args__ || event.detail;
     }
   }
 
-  var extraObj = processEventExtra(vm, extra);
+  var extraObj = processEventExtra(vm, extra, event);
 
   var ret = [];
   args.forEach(function (arg) {
@@ -1681,13 +1780,15 @@ function processEventArgs(vm, event) {var args = arguments.length > 2 && argumen
         ret.push(event.target.value);
       } else {
         if (isCustom && !isCustomMPEvent) {
-          ret.push(event.detail[0]);
+          ret.push(event.detail.__args__[0]);
         } else {// wxcomponent 组件或内置组件
           ret.push(event);
         }
       }
     } else {
-      if (typeof arg === 'string' && hasOwn(extraObj, arg)) {
+      if (Array.isArray(arg) && arg[0] === 'o') {
+        ret.push(getObjByArray(arg));
+      } else if (typeof arg === 'string' && hasOwn(extraObj, arg)) {
         ret.push(extraObj[arg]);
       } else {
         ret.push(arg);
@@ -1753,7 +1854,7 @@ function initRefs(vm) {
   var mpInstance = vm.$mp[vm.mpType];
   Object.defineProperty(vm, '$refs', {
     get: function get() {
-      var $refs = Object.create(null);
+      var $refs = {};
       var components = mpInstance.selectAllComponents('.vue-ref');
       components.forEach(function (component) {
         var ref = component.dataset.ref;
@@ -1773,12 +1874,28 @@ function initRefs(vm) {
 }
 
 var hooks = [
-'onShow',
 'onHide',
 'onError',
 'onPageNotFound',
 'onUniNViewMessage'];
 
+
+function initVm(vm) {
+  if (this.$vm) {// 百度竟然 onShow 在 onLaunch 之前？
+    return;
+  }
+  {
+    if (!wx.canIUse('nextTick')) {// 事实 上2.2.3 即可，简单使用 2.3.0 的 nextTick 判断
+      console.error('当前微信基础库版本过低，请将 微信开发者工具-详情-项目设置-调试基础库版本 更换为`2.3.0`以上');
+    }
+  }
+
+  this.$vm = vm;
+
+  this.$vm.$mp = {
+    app: this };
+
+}
 
 function createApp(vm) {
   // 外部初始化时 Vue 还未初始化，放到 createApp 内部初始化 mixin
@@ -1796,8 +1913,10 @@ function createApp(vm) {
       delete this.$options.mpInstance;
 
       if (this.mpType !== 'app') {
-        initRefs(this);
-        initMocks(this);
+        {// 头条的 selectComponent 竟然是异步的
+          initRefs(this);
+        }
+        initMocks(this, mocks);
       }
     },
     created: function created() {// 处理 injections
@@ -1808,22 +1927,17 @@ function createApp(vm) {
 
   var appOptions = {
     onLaunch: function onLaunch(args) {
-      {
-        if (!wx.canIUse('nextTick')) {// 事实 上2.2.3 即可，简单使用 2.3.0 的 nextTick 判断
-          console.error('当前微信基础库版本过低，请将 微信开发者工具-详情-项目设置-调试基础库版本 更换为`2.3.0`以上');
-        }
-      }
-
-      this.$vm = vm;
-
-      this.$vm.$mp = {
-        app: this };
-
+      initVm.call(this, vm);
 
       this.$vm._isMounted = true;
       this.$vm.__call_hook('mounted');
 
       this.$vm.__call_hook('onLaunch', args);
+    },
+    onShow: function onShow(args) {
+      initVm.call(this, vm);
+
+      this.$vm.__call_hook('onShow', args);
     } };
 
 
@@ -1835,28 +1949,6 @@ function createApp(vm) {
   App(appOptions);
 
   return vm;
-}
-
-function triggerLink(mpInstance, vueOptions) {
-  mpInstance.triggerEvent('__l', mpInstance.$vm || vueOptions, {
-    bubbles: true,
-    composed: true });
-
-}
-
-function handleLink(event) {
-  if (event.detail.$mp) {// vm
-    if (!event.detail.$parent) {
-      event.detail.$parent = this.$vm;
-      event.detail.$parent.$children.push(event.detail);
-
-      event.detail.$root = this.$vm.$root;
-    }
-  } else {// vueOptions
-    if (!event.detail.parent) {
-      event.detail.parent = this.$vm;
-    }
-  }
 }
 
 var hooks$1 = [
@@ -1875,6 +1967,20 @@ var hooks$1 = [
 'onNavigationBarSearchInputClicked'];
 
 
+function initVm$1(VueComponent) {// 百度的 onLoad 触发在 attached 之前
+  if (this.$vm) {
+    return;
+  }
+
+  this.$vm = new VueComponent({
+    mpType: 'page',
+    mpInstance: this });
+
+
+  this.$vm.__call_hook('created');
+  this.$vm.$mount();
+}
+
 function createPage(vueOptions) {
   vueOptions = vueOptions.default || vueOptions;
   var VueComponent;
@@ -1892,14 +1998,7 @@ function createPage(vueOptions) {
     data: getData(vueOptions, _vue.default.prototype),
     lifetimes: { // 当页面作为组件时
       attached: function attached() {
-
-        this.$vm = new VueComponent({
-          mpType: 'page',
-          mpInstance: this });
-
-
-        this.$vm.__call_hook('created');
-        this.$vm.$mount();
+        initVm$1.call(this, VueComponent);
       },
       ready: function ready() {
         this.$vm.__call_hook('beforeMount');
@@ -1913,6 +2012,7 @@ function createPage(vueOptions) {
 
     methods: { // 作为页面时
       onLoad: function onLoad(args) {
+        initVm$1.call(this, VueComponent);
         this.$vm.$mp.query = args; // 又要兼容 mpvue
         this.$vm.__call_hook('onLoad', args); // 开发者可能会在 onLoad 时赋值，提前到 mount 之前
       },
@@ -1929,37 +2029,39 @@ function createPage(vueOptions) {
   return Component(pageOptions);
 }
 
-function initVueComponent(mpInstace, VueComponent) {var extraOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  if (mpInstace.$vm) {
+function initVm$2(VueComponent) {
+  if (this.$vm) {
     return;
   }
 
-  var options = Object.assign({
+  var options = {
     mpType: 'component',
-    mpInstance: mpInstace,
-    propsData: mpInstace.properties },
-  extraOptions);
+    mpInstance: this,
+    propsData: this.properties };
+
   // 初始化 vue 实例
-  mpInstace.$vm = new VueComponent(options);
+  this.$vm = new VueComponent(options);
 
   // 处理$slots,$scopedSlots（暂不支持动态变化$slots）
-  var vueSlots = mpInstace.properties.vueSlots;
+  var vueSlots = this.properties.vueSlots;
   if (Array.isArray(vueSlots) && vueSlots.length) {
     var $slots = Object.create(null);
     vueSlots.forEach(function (slotName) {
       $slots[slotName] = true;
     });
-    mpInstace.$vm.$scopedSlots = mpInstace.$vm.$slots = $slots;
+    this.$vm.$scopedSlots = this.$vm.$slots = $slots;
   }
   // 性能优先，mount 提前到 attached 中，保证组件首次渲染数据被合并
   // 导致与标准 Vue 的差异，data 和 computed 中不能使用$parent，provide等组件属性
-  mpInstace.$vm.$mount();
+  this.$vm.$mount();
 }
 
 function createComponent(vueOptions) {
   vueOptions = vueOptions.default || vueOptions;
 
-  var properties = getProperties(vueOptions.props);
+  var behaviors = getBehaviors(vueOptions);
+
+  var properties = getProperties(vueOptions.props, false, vueOptions.__file);
 
   var VueComponent = _vue.default.extend(vueOptions);
 
@@ -1969,13 +2071,14 @@ function createComponent(vueOptions) {
       addGlobalClass: true },
 
     data: getData(vueOptions, _vue.default.prototype),
+    behaviors: behaviors,
     properties: properties,
     lifetimes: {
       attached: function attached() {
-        initVueComponent(this, VueComponent);
+        initVm$2.call(this, VueComponent);
       },
       ready: function ready() {
-        initVueComponent(this, VueComponent); // 目前发现部分情况小程序 attached 不触发
+        initVm$2.call(this, VueComponent); // 目前发现部分情况小程序 attached 不触发
         triggerLink(this); // 处理 parent,children
 
         // 补充生命周期
@@ -6624,7 +6727,7 @@ function initProps (vm, propsOptions) {
       }
       defineReactive$$1(props, key, value, function () {
         if (!isRoot && !isUpdatingChildComponent) {
-          warn(
+          !vm._getFormData && warn(//fixed by xxxxxx uni://form-field 时不告警
             "Avoid mutating a prop directly since the value will be " +
             "overwritten whenever the parent component re-renders. " +
             "Instead, use a data or computed property based on the prop's " +
@@ -6947,10 +7050,7 @@ function initMixin (Vue) {
     initEvents(vm);
     initRender(vm);
     callHook(vm, 'beforeCreate');
-    // initInjections(vm) // resolve injections before data/props
     initState(vm);
-    // initProvide(vm) // resolve provide after data/props
-    // callHook(vm, 'created')
 
     /* istanbul ignore if */
     if ( true && config.performance && mark) {
@@ -7506,6 +7606,67 @@ function type(obj) {
 
 /*  */
 
+function flushCallbacks$1(vm) {
+    if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+            var mpInstance = vm.$mp[vm.mpType];
+            console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
+                ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
+        }
+        var copies = vm.__next_tick_callbacks.slice(0);
+        vm.__next_tick_callbacks.length = 0;
+        for (var i = 0; i < copies.length; i++) {
+            copies[i]();
+        }
+    }
+}
+
+function hasRenderWatcher(vm) {
+    return queue.find(function (watcher) { return vm._watcher === watcher; })
+}
+
+function nextTick$1(vm, cb) {
+    //1.nextTick 之前 已 setData 且 setData 还未回调完成
+    //2.nextTick 之前存在 render watcher
+    if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+            var mpInstance = vm.$mp[vm.mpType];
+            console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
+                ']:nextVueTick');
+        }
+        return nextTick(cb, vm)
+    }else{
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+            var mpInstance$1 = vm.$mp[vm.mpType];
+            console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
+                ']:nextMPTick');
+        }
+    }
+    var _resolve;
+    if (!vm.__next_tick_callbacks) {
+        vm.__next_tick_callbacks = [];
+    }
+    vm.__next_tick_callbacks.push(function () {
+        if (cb) {
+            try {
+                cb.call(vm);
+            } catch (e) {
+                handleError(e, vm, 'nextTick');
+            }
+        } else if (_resolve) {
+            _resolve(vm);
+        }
+    });
+    // $flow-disable-line
+    if (!cb && typeof Promise !== 'undefined') {
+        return new Promise(function (resolve) {
+            _resolve = resolve;
+        })
+    }
+}
+
+/*  */
+
 function cloneWithData(vm) {
     // 确保当前 vm 所有数据被同步
     var dataKeys = [].concat(
@@ -7518,11 +7679,19 @@ function cloneWithData(vm) {
     }, Object.create(null));
     //TODO 需要把无用数据处理掉，比如 list=>l0 则 list 需要移除，否则多传输一份数据
     Object.assign(ret, vm.$mp.data || {});
-    //remove observer
+    if (
+        Array.isArray(vm.$options.behaviors) &&
+        vm.$options.behaviors.indexOf('uni://form-field') !== -1
+    ) { //form-field
+        ret['name'] = vm.name;
+        ret['value'] = vm.value;
+    }
     return JSON.parse(JSON.stringify(ret))
 }
 
 var patch = function(oldVnode, vnode) {
+    var this$1 = this;
+
     if (vnode === null) { //destroy
         return
     }
@@ -7536,14 +7705,18 @@ var patch = function(oldVnode, vnode) {
         });
         var diffData = diff(data, mpData);
         if (Object.keys(diffData).length) {
-            if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+            if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
                 console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
                     ']差量更新',
                     JSON.stringify(diffData));
             }
-            mpInstance.setData(diffData,function(){
-                //TODO
+            this.__next_tick_pending = true;
+            mpInstance.setData(diffData, function () {
+                this$1.__next_tick_pending = false;
+                flushCallbacks$1(this$1);
             });
+        } else {
+            flushCallbacks$1(this);
         }
     }
 };
@@ -7690,10 +7863,14 @@ var MP_METHODS = ['createSelectorQuery', 'createIntersectionObserver', 'selectAl
 
 function getTarget(obj, path) {
     var parts = path.split('.');
-    if (parts.length === 1) {
-        return obj[parts[0]]
+    var key = parts[0];
+    if (key.indexOf('__$n') === 0) { //number index
+        key = parseInt(key.replace('__$n', ''));
     }
-    return getTarget(obj[parts[0]], parts.slice(1).join('.'))
+    if (parts.length === 1) {
+        return obj[key]
+    }
+    return getTarget(obj[key], parts.slice(1).join('.'))
 }
 
 function internalMixin(Vue) {
@@ -7702,10 +7879,15 @@ function internalMixin(Vue) {
 
     Vue.prototype.$emit = function(event) {
         if (this.$mp && event) {
-            //click-left,click:left => clickLeft
-            this.$mp[this.mpType]['triggerEvent'](event, toArray(arguments, 1));
+            this.$mp[this.mpType]['triggerEvent'](event, {
+                __args__: toArray(arguments, 1)
+            });
         }
         return oldEmit.apply(this, arguments)
+    };
+    
+    Vue.prototype.$nextTick = function (fn) {
+      return nextTick$1(this, fn)
     };
 
     MP_METHODS.forEach(function (method) {
@@ -7741,10 +7923,10 @@ function internalMixin(Vue) {
 
     Vue.prototype.__set_model = function(target, key, value, modifiers) {
         if (Array.isArray(modifiers)) {
-            if (modifiers.includes('trim')) {
+            if (modifiers.indexOf('trim') !== -1) {
                 value = value.trim();
             }
-            if (modifiers.includes('number')) {
+            if (modifiers.indexOf('number') !== -1) {
                 value = this._n(value);
             }
         }
@@ -7822,7 +8004,7 @@ function lifecycleMixin$1(Vue) {
         var methods = extendOptions.methods;
         if (methods) {
             Object.keys(methods).forEach(function (methodName) {
-                if (LIFECYCLE_HOOKS$1.includes(methodName)) {
+                if (LIFECYCLE_HOOKS$1.indexOf(methodName)!==-1) {
                     extendOptions[methodName] = methods[methodName];
                     delete methods[methodName];
                 }

@@ -17,22 +17,24 @@
 
 			<navigator url="../setting/setting" v-if="storageData.login" class="btn">个人设置</navigator>
 		</view>
-
-		<!-- <scroll-view class="c1" scroll-x="true">
-			<view class="c1-1"><image src="../../static/11.png" style="width: 100%;"></image></view>
-			<view class="c1-1"><image src="../../static/111.png" mode=""></image></view>
-			<view class="c1-1"><image src="../../static/2.jpg" mode=""></image></view>
-			<view class="c1-1"><image src="../../static/3.jpg" mode=""></image></view>
-		</scroll-view> -->
-		<swiper class="grace-swiper" autoplay="true" indicator-dots indicator-color="rgba(255, 255, 255, 1)"
-		 indicator-active-color="#00B26A" style="height :240upx " interval="3000">
-			<swiper-item v-for="(item, index) in swiperItems" :key="index">
-				<navigator :url='item.path' :open-type="item.openType">
-					<image :src='item.imgUrl' mode='widthFix' class="MySwiper"></image>
-					<view class="title">{{item.title}}</view>
-				</navigator>
-			</swiper-item>
-		</swiper>
+		
+		
+		<view class="photo">
+			<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" class="carousel">
+				<swiper-item>
+					<image src="../../static/11.png" class="photo-img"></image>
+				</swiper-item>
+				<swiper-item>
+					<image src="../../static/111.png" class="photo-img"></image>
+				</swiper-item>
+				<swiper-item>
+					<image src="../../static/2.jpg" class="photo-img"></image>
+				</swiper-item>
+				<swiper-item>
+					<image src="../../static/3.jpg" class="photo-img"></image>
+				</swiper-item>
+			</swiper>
+		</view>
 
 		<!-- 个人-->
 		<!-- <view class="middle" v-if="storageData.login"> -->
@@ -287,7 +289,6 @@ export default {
 <style scoped>
 /* 头像 */
 .top {
-	/* display: flex; */
 	height: 70px;
 	margin-top: 10px;
 	/* border: 2px solid #007AFF; */
@@ -296,17 +297,15 @@ export default {
 	display: flex;
 	align-content: center;
 	justify-content: center;
-	/* flex: 1 1 30%; */
-	margin-bottom: 10px;
-	/* border: 1px solid #aaa; */
 }
 .info-box {
-	/* flex: 1 1 70%; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	/* border: 1px solid blue; */
+	
 }
+
 /* 昵称 */
 .top-name {
 	display: flex;
@@ -316,30 +315,26 @@ export default {
 /*  个人设置*/
 .btn {
 	margin-left: 10px;
-	/* border: 1px solid red; */
 	color: rgb(133, 218, 70);
 }
 
-.c1 {
-	margin-top: 25px;
+.photo{
+	margin-top: 20px;
 	margin-bottom: 10px;
-	white-space: nowrap;
-	display: flex;
-	margin-bottom: 10px;
+	border-radius: 10px;
 }
-.c1-1 {
+.carousel{
 	width: 100%;
-	height: 130px;
-	display: inline-block;
+	height: 100px;
+	border-radius: 5px;
+	/* border:  1px solid #000000; */
 }
-.c1-1 image {
+.photo-img{
 	width: 100%;
-	height: 100%;
+	height: 100px;
+	border-radius: 5px;
 }
 
-.middle {
-	margin-top: 10px;
-}
 .list-title {
 	font-size: 12pt;
 	font-weight: 800;
@@ -349,7 +344,6 @@ export default {
 	justify-content: space-between;
 	align-items: center;
 	margin-right: 5px;
-
 	font-size: 10pt;
 	font-weight: 200;
 	/* border: 1px solid #007AFF; */

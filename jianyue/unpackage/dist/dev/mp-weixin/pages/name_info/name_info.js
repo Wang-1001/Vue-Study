@@ -105,12 +105,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 var _default =
 {
   data: function data() {
@@ -118,8 +112,7 @@ var _default =
       renickname: '' };
 
   },
-  onLoad: function onLoad() {
-  },
+  onLoad: function onLoad() {},
   methods: {
     changeNickname: function changeNickname(renickname) {
       var _this = this;

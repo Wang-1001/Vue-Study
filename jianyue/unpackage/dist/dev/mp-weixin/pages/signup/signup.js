@@ -125,6 +125,43 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -137,11 +174,11 @@ var _default =
       verifyCode: '' };
 
   },
-  onLoad: function onLoad() {
-    uni.setNavigationBarTitle({
-      title: '注册' });
-
-  },
+  /* onLoad() {
+     	uni.setNavigationBarTitle({
+     		title: '注册'
+     	});
+     }, */
   methods: {
     getVerifyCode: function getVerifyCode() {var _this2 = this;
       var TIME_COUNT = 60;
@@ -185,6 +222,7 @@ var _default =
         }, 1000);
       }
     },
+
     checkCode: function checkCode() {
       var _this = this;
       console.log(_this.verifyCode);
