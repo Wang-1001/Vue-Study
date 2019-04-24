@@ -178,15 +178,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
     return {
-      /* 1111 */
-      sex: '',
-      birthday: '',
-      homepage: '',
-      individual: '',
+      genderIndex: 0,
+      gender: ['男', '女'],
+      dateValue: "请选择",
+
 
       nickname: '',
       avatar: '',
@@ -214,6 +227,17 @@ var _default =
 
   },
   methods: {
+    bindPickerChange: function bindPickerChange(e) {
+      console.log(e);
+      this.genderIndex = e.detail.value;
+    },
+    bindDateChange: function bindDateChange(e) {
+      this.dateValue = e.detail.value;
+    },
+    formSubmit: function formSubmit(e) {
+      wx.showToast({ title: '提交成功！', icon: 'none' });
+      console.log(JSON.stringify(e.detail.value));
+    },
     showActionSheet: function showActionSheet() {
       console.log('show');
       var _this = this;

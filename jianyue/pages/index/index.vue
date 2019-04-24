@@ -177,6 +177,7 @@ export default {
 </script>
 
 <style scoped>
+
 .article-box{
 	/* border: 1px solid #FF3A30 ; */
 }
@@ -185,6 +186,7 @@ export default {
 	background: #ffffff;
 }
 .article-title{
+	margin-left: 5px;
 	font-size: 13pt;
 	font-weight: 700;
 }
@@ -198,7 +200,7 @@ export default {
 }	
 .thumbnail-item{
 	margin-right: 5px;
-	
+	margin-left: 5px;
 	height: 100px;
 	flex: 1 1 30%;
 	/* border: 1px solid black; */
@@ -213,9 +215,11 @@ export default {
 	display: flex;
 }	
 .left{
+	margin-left: 5px;
 	flex: 1 1 70%;
 }	
 .right{
+	margin-right: 5px;
 	flex: 1 1 30%;
 	height: 100px;
 }	
@@ -230,11 +234,16 @@ export default {
 	width: 100%;
 	/* border:  1px solid #000000; */
 }
+.content1{
+	margin-left: 5px;
+}
 	
 	
 	
 	/* 作者信息 */
 .article-info{
+	margin-top: 5px;
+	
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -245,6 +254,7 @@ export default {
 	align-items: center;
 }
 .author-avatar{
+	margin-left: 5px;
 	margin-right: 15px;
 	width: 40px;
 	height: 40px;
@@ -264,6 +274,7 @@ export default {
 }
 	/* 顶部导航栏 */
 .container {
+	width: 100%;
 	font-size: 13pt;
 	background: #eeeeee; 
 }
@@ -274,6 +285,7 @@ export default {
 	display: flex;
 	justify-content: space-between;
 	border-bottom: 1px solid #aaa;
+	
 	/* border: 1px solid #00B26A; */
 }
 .top-left {

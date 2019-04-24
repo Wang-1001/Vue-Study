@@ -7,6 +7,7 @@
 				<view class="left">更换头像</view>
 				<view class="right2"><image :src="avatar" class="avatar"></image></view>
 			</view>
+
 			<navigator url="../name_info/name_info">
 				<view class="list-item-heigher">
 					<view class="left">更改昵称</view>
@@ -16,26 +17,39 @@
 					</view>
 				</view>
 			</navigator>
-			<view class="list-item-heigher">
-				<view class="left">更改性别</view>
-				<!-- <view class="right">{{ sex }}</view> -->
-				<view class="right">男</view>
-			</view>
-			<view class="list-item-heigher">
-				<view class="left">更改生日</view>
-				<!-- <view class="right">{{ birthday }}</view> -->
-				<view class="right">1998-10-01</view>
-			</view>
-			<view class="list-item-heigher"><view class="left">更改主页</view></view>
-			<view class="list-item-heigher">
-				<view class="left">个人简介</view>
-				<!-- <view class="right">{{ individual }}</view> -->
-				<view class="right">呆若木鸡的猪</view>
-			</view>
+		
+			<form @submit="formSubmit">
+				<view class="list-item-heigher">
+					<view class="left">性别</view>
+					<view class="right">
+						<picker @change="bindPickerChange" :value="genderIndex" :range="gender" name="gender">
+							<text>{{ gender[genderIndex] }}</text>
+						</picker>
+					</view>
+				</view>
+				<view class="list-item-heigher">
+					<view class="left">出生年月</view>
+					<view class="right">
+						<picker @change="bindDateChange" :value="dateValue" mode="date" name="bd" start="2018-01-01" end="2019-01-01">
+							<text>{{ dateValue }}</text>
+						</picker>
+					</view>
+				</view>
+				<view class="list-item-heigher"><view class="left">更改主页</view></view>
+				<view class="list-item-heigher">
+					<view class="left">个人简介</view>
+					<view class="right">
+						<textarea placeholder="说点什么吧....." maxlength="6" name="desc" class="q"></textarea>
+					</view>
+				</view>
+				<view class="tj">
+					<button formType="submit" class="tj-btn">提交</button>
+				</view>
+			</form>
 
 			<view class="list-title"><view class="title-words">绑定账号登录简书</view></view>
 			<view class="title-words-a"><view class="title-words-b">出于安全因素，你至少需要保留一种登录方式</view></view>
-			
+
 			<view class="list-box">
 				<view class="list-left"><image src="../../static/sj.png"></image></view>
 				<view class="list-right">151****3716</view>
@@ -56,7 +70,7 @@
 				<view class="list-left"><image src="../../static/db.png"></image></view>
 				<view class="list-right">未绑定</view>
 			</view>
-			
+
 			<view class="a"></view>
 
 			<navigator url="../password_info/password_info">
@@ -82,11 +96,10 @@
 export default {
 	data() {
 		return {
-			/* 1111 */
-			sex: '',
-			birthday: '',
-			homepage: '',
-			individual: '',
+			genderIndex: 0,
+			gender : ['男', '女'],
+			dateValue : "请选择",
+			
 
 			nickname: '',
 			avatar: '',
@@ -114,6 +127,17 @@ export default {
 		});
 	},
 	methods: {
+		bindPickerChange:function(e){
+			console.log(e);
+			this.genderIndex = e.detail.value;
+		},
+		bindDateChange : function(e){
+			this.dateValue = e.detail.value;
+		},
+		formSubmit : function(e){
+			wx.showToast({title:'提交成功！', icon:'none'});
+			console.log(JSON.stringify(e.detail.value));
+		},
 		showActionSheet: function() {
 			console.log('show');
 			var _this = this;
@@ -182,6 +206,20 @@ export default {
 </script>
 
 <style scoped>
+
+.tj-btn{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40%;
+	border-radius: 30px;
+	background-color: rgb(233, 111, 90);
+	color: #ffffff;
+}
+.q{
+	height: 30px;
+	width: 120px;
+}
 .container {
 	width: 100%;
 	background: rgb(255, 255, 255);
@@ -221,14 +259,14 @@ export default {
 .right {
 	display: flex;
 	justify-content: center;
-	font-size: 10pt;
+	font-size: 12pt;
 	font-weight: 200;
 	font-style: italic;
-	margin-right: 10px;
+	margin-right: 15px;
 	/* border: 1px solid #007aff; */
 }
 .list-img {
-	margin-right: 5px;
+	
 	margin-left: 10px;
 }
 .list-img image {
@@ -247,13 +285,13 @@ export default {
 	color: rgb(180, 180, 180);
 	margin-bottom: 10px;
 }
-.list-box{
+.list-box {
 	display: flex;
 	height: 60px;
 	border-bottom: 1px solid rgb(241, 241, 241);
 	border-top: 1px solid rgb(241, 241, 241);
 }
-.list-left{
+.list-left {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -264,13 +302,13 @@ export default {
 	height: 30px;
 	width: 30px;
 }
-.list-right{
+.list-right {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 14pt;
 }
-.a{
+.a {
 	height: 20px;
 	background: rgb(252, 252, 252);
 }

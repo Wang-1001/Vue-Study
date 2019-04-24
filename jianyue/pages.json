@@ -151,7 +151,7 @@
 		{
 		    "path" : "pages/password_info/password_info",
 		    "style" : {
-				
+				"navigationBarTitleText": "重置密码"
 			}
 		},
 		{
