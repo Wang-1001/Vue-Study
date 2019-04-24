@@ -888,6 +888,23 @@ createPage(_password_info.default);
 
 /***/ }),
 
+/***/ "../../../../Vue-Study/jianyue/main.js?{\"page\":\"pages%2Fpersonal-center%2Fpersonal-center\"}":
+/*!*****************************************************************************************!*\
+  !*** D:/Vue-Study/jianyue/main.js?{"page":"pages%2Fpersonal-center%2Fpersonal-center"} ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ "../../../../Vue-Study/jianyue/pages.json");
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ "./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js"));
+var _personalCenter = _interopRequireDefault(__webpack_require__(/*! ./pages/personal-center/personal-center.vue */ "../../../../Vue-Study/jianyue/pages/personal-center/personal-center.vue"));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_personalCenter.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ "./node_modules/@dcloudio/uni-mp-weixin/dist/index.js")["createPage"]))
+
+/***/ }),
+
 /***/ "../../../../Vue-Study/jianyue/main.js?{\"page\":\"pages%2Fsearch%2Fsearch\"}":
 /*!***********************************************************************!*\
   !*** D:/Vue-Study/jianyue/main.js?{"page":"pages%2Fsearch%2Fsearch"} ***!

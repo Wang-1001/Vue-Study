@@ -24,6 +24,7 @@
     "pages/special/wgzdzt",
     "pages/more/more",
     "pages/password_info/password_info",
+    "pages/personal-center/personal-center",
     "pages/article_detail/article_detail"
   ],
   "subPackages": [],

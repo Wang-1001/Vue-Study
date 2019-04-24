@@ -155,6 +155,12 @@
 			}
 		},
 		{
+			"path": "pages/personal-center/personal-center",
+			"style": {
+				"navigationBarTitleText": "个人中心"
+			}
+		},
+		{
 			"path": "pages/article_detail/article_detail",
 			"style": {
 				"navigationBarTitleText": "文章详情",

@@ -318,7 +318,7 @@ export default {
 	border-radius: 50%;
 	color: #9370db;
 	position: fixed;
-	bottom: 30px;
+	bottom: 60px;
 	right: 10px;
 }
 .btn-up image {

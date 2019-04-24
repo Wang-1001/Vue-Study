@@ -215,6 +215,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var loginRes, _self;var _default =
 {
   data: function data() {
@@ -223,27 +252,33 @@ var loginRes, _self;var _default =
         userId: 0,
         login: false },
 
-
       /* storageData: {}, */
       avatar: '',
       nickname: '',
-
       //分类信息
       categories: [
       {
         cateid: 0,
         name: '文章' },
 
+
       {
         cateid: 1,
         name: '关注' },
 
+
       {
         cateid: 2,
-        name: '收藏' },
+        name: '粉丝' },
+
 
       {
         cateid: 3,
+        name: '收藏' },
+
+
+      {
+        cateid: 4,
         name: '签到' }],
 
 
@@ -252,20 +287,17 @@ var loginRes, _self;var _default =
       articles: [],
       follows: [],
 
-
       /* 遮罩层 */
       staticUrl: this.staticUrl,
       show: false,
-      show2: false };
-
-
+      show2: false,
+      followed: true };
 
   },
   onLoad: function onLoad() {},
   onShow: function onShow() {
     var _this = this;
     var loginKey = uni.getStorageSync('login_key');
-
     if (loginKey) {
       this.storageData = {
         login: loginKey.login,
@@ -312,7 +344,6 @@ var loginRes, _self;var _default =
         login: false };
 
     }
-
     uni.request({
       url: 'http://localhost:8080/api/user/' + uni.getStorageSync('login_key').userId,
       method: 'GET',
@@ -326,8 +357,10 @@ var loginRes, _self;var _default =
       } });
 
   },
-
   methods: {
+    handclick: function handclick() {
+      this.followed = !this.followed;
+    },
     handleTime: function handleTime(date) {
       var d = new Date(date);
       var year = d.getFullYear();
@@ -370,13 +403,10 @@ var loginRes, _self;var _default =
     },
     tap2: function tap2() {
       uni.showToast({
-        title: "您点击了红包图片",
-        icon: "none" });
+        title: '您点击了红包图片',
+        icon: 'none' });
 
     } },
-
-
-
 
   /* 遮罩层 */
   components: {
