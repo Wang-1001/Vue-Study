@@ -1,1 +1,0 @@
-<view class="container" bind:__l="__l"><block wx:for="{{others}}" wx:for-item="other" wx:for-index="index" wx:key="index"><view class="content"><view class="others-content">{{''+other.content+''}}</view><view class="others-time">{{''+other.time+''}}</view></view></block></view>

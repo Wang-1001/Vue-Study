@@ -1,0 +1,2 @@
+setCssToHead(["wx-input { height: 50px; border-bottom: 1px solid #eee; margin-bottom: 5px; }\n",],undefined,{path:"./pages/name_info/name_info.wxss"})();
+document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/name_info/name_info.wxml') } }));

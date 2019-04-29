@@ -1,0 +1,1 @@
+<view class="container data-v-b274ccce" bind:__l="__l"><view class="main data-v-b274ccce"><view class="input-box data-v-b274ccce"><input type="text" placeholder="在这里输入内容" class="data-v-b274ccce"/></view><view class="btn data-v-b274ccce"><button class="submit data-v-b274ccce">发送</button></view></view></view>

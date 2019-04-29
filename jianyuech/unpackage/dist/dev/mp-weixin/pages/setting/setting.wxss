@@ -1,0 +1,60 @@
+
+.container.data-v-2f184ae9 {
+	width: 100%;
+}
+.option.data-v-2f184ae9 {
+	
+	background: rgb(252, 252, 252);
+}
+.option-list.data-v-2f184ae9 {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	height: 35px;
+	width: 100%;
+	color: rgb(233, 111, 90);
+}
+.list-words.data-v-2f184ae9 {
+	font-size: 9pt;
+	margin-left: 5px;
+}
+.list-item.data-v-2f184ae9{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	height: 60px;
+}
+.list-word.data-v-2f184ae9 {
+	font-size: 14pt;
+	margin-left: 5px;
+}
+/* 退出当前账号 */
+.secede.data-v-2f184ae9 {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	width: 80%;
+	border-radius: 30px;
+	background-color: rgb(233, 111, 90);
+	color: #ffffff;
+}
+

@@ -1,0 +1,91 @@
+
+.name-box.data-v-6c99254d{
+	height:60px ;
+	border-bottom: 1px solid rgb(241, 241, 241);
+	border-top: 1px solid rgb(241, 241, 241);
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
+}
+.left-box.data-v-6c99254d{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	margin-left: 5px;
+	font-size: 14pt;
+}
+.right-box.data-v-6c99254d{
+	margin-right: 10px;
+	font-size: 12pt;
+	font-weight: 200;
+	font-style: italic;
+	margin-right: 15px;
+}
+input.data-v-6c99254d {
+	height: 20px;
+	width: 80px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 5px;
+	/* border: 1px solid #000000; */
+}
+.uni-input.data-v-6c99254d{
+	font-size: 12pt;
+	font-weight: 200;
+	font-style: italic;
+}
+.amend-btn.data-v-6c99254d{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	width: 80%;
+	border-radius: 30px;
+	background-color: rgb(233, 111, 90);
+	color: #ffffff;
+}
+.bottom-box.data-v-6c99254d{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	-webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	height: 200px;
+	width: 95%;
+    position: fixed;
+	bottom: 200px;
+	/* border: 1px solid #000000; */
+}
+.bottom-img.data-v-6c99254d{
+	width: 100%;
+	height: 100%;
+}
+

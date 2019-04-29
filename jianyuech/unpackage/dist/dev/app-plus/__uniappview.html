@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+    <head>
+        <meta charset="UTF-8" />
+        <script>
+            var coverSupport = 'CSS' in window && typeof CSS.supports === 'function' && (CSS.supports('top: env(a)') || CSS.supports('top: constant(a)'))
+            document.write('<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' + (coverSupport ? ', viewport-fit=cover' : '') + '" />')
+        </script>
+        <title>View</title>
+        <style>
+            * {
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            input[type="search"i]::-webkit-search-cancel-button {
+                display: none;
+            }
+
+        </style>
+        <script>
+            var __wxConfig = {"debug":false,"appname":"jianyue","entryPagePath":"pages/index/index.html","page":{"pages/index/index.html":{"window":{"usingComponents":{},"navigationBarTitleText":"文章","enablePullDownRefresh":true}},"pages/message/message.html":{"window":{"usingComponents":{},"navigationBarTitleText":"消息"}},"pages/my/my.html":{"window":{"usingComponents":{},"navigationBarTitleText":"我的"}},"pages/signin/signin.html":{"window":{"usingComponents":{}}},"pages/write/write.html":{"window":{"usingComponents":{}}},"pages/info/info.html":{"window":{"usingComponents":{}}},"pages/setting/setting.html":{"window":{"usingComponents":{}}},"pages/user_info/user_info.html":{"window":{"usingComponents":{},"navigationBarTitleText":"个人资料设置","enablePullDownRefresh":true}},"pages/message/interaction.html":{"window":{"usingComponents":{},"navigationBarTitleText":"互动消息","enablePullDownRefresh":true}},"pages/message/jianshuzuan.html":{"window":{"usingComponents":{},"navigationBarTitleText":"明细","enablePullDownRefresh":true}},"pages/message/others.html":{"window":{"usingComponents":{},"navigationBarTitleText":"其他提醒","enablePullDownRefresh":true}},"pages/message/newmessage.html":{"window":{"usingComponents":{},"navigationBarTitleText":"新简信","enablePullDownRefresh":true}},"pages/name_info/name_info.html":{"window":{"usingComponents":{}}},"pages/signup/signup.html":{"window":{"usingComponents":{}}},"pages/password/password.html":{"window":{"usingComponents":{}}},"pages/search/search.html":{"window":{"usingComponents":{}}},"pages/special/bsc.html":{"window":{"usingComponents":{},"navigationBarTitleText":"贝市场"}},"pages/special/jygc.html":{"window":{"usingComponents":{},"navigationBarTitleText":"简友市场"}},"pages/special/rmzt.html":{"window":{"usingComponents":{},"navigationBarTitleText":"热门专题"}},"pages/special/tsjy.html":{"window":{"usingComponents":{},"navigationBarTitleText":"投诉建议"}},"pages/special/hjgy.html":{"window":{"usingComponents":{},"navigationBarTitleText":"互加公益"}},"pages/special/wgzdzt.html":{"window":{"usingComponents":{},"navigationBarTitleText":"我关注的专题"}},"pages/more/more.html":{"window":{"usingComponents":{}}},"pages/password_info/password_info.html":{"window":{"usingComponents":{}}},"pages/article_detail/article_detail.html":{"window":{"usingComponents":{},"navigationBarTitleText":"文章详情","enablePullDownRefresh":true}}},"global":{"window":{"navigationBarTextStyle":"black","navigationBarBackgroundColor":"#F8F8F8","backgroundColor":"#F8F8F8"}},"tabBar":{"color":"#707070","selectedColor":"#DE533A","backgroundColor":"","borderStyle":"black","list":[{"pagePath":"pages/index/index.html","text":"文章","iconPath":"static/nav1.png","selectedIconPath":"static/nav1-a.png"},{"pagePath":"pages/message/message.html","text":"消息","iconPath":"static/nav2.png","selectedIconPath":"static/nav2-a.png"},{"pagePath":"pages/my/my.html","text":"我的","iconPath":"static/nav3.png","selectedIconPath":"static/nav3-a.png"}],"position":"bottom"},"networkTimeout":{"request":60000,"connectSocket":60000,"uploadFile":60000,"downloadFile":60000},"platform":"devtools","pages":["pages/index/index","pages/message/message","pages/my/my","pages/signin/signin","pages/write/write","pages/info/info","pages/setting/setting","pages/user_info/user_info","pages/message/interaction","pages/message/jianshuzuan","pages/message/others","pages/message/newmessage","pages/name_info/name_info","pages/signup/signup","pages/password/password","pages/search/search","pages/special/bsc","pages/special/jygc","pages/special/rmzt","pages/special/tsjy","pages/special/hjgy","pages/special/wgzdzt","pages/more/more","pages/password_info/password_info","pages/article_detail/article_detail"],"subPackages":[],"usingComponents":{},"splashscreen":{"alwaysShowBeforeRender":true,"autoclose":false},"compilerVersion":"1.9.2"}
+
+        </script>
+        <script>
+            var __id__ = '';
+            window.__dispatchGenerateFunc__ = function(page) {
+                __id__ = page;
+                document.title = page;
+                // window.history.pushState('', '', page);
+                plus.webview.currentWebview().setJsFile('_www/' + page.replace('.html', '.js'));
+            };
+
+        </script>
+        <script src="__uniappes6.js"></script>
+        <script src="uniapp://ready"></script>
+    </head>
+
+    <body>
+        <div></div>
+    </body>
+
+</html>

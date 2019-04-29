@@ -1,0 +1,1 @@
+<view bind:__l="__l"><uni-swipe-action options="{{options}}" vue-slots="{{['default']}}"><view class="cont">SwipeAction 基础使用场景</view></uni-swipe-action></view>

@@ -1,0 +1,20 @@
+
+.content{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-size: 10pt;
+	background: #EEEEEE;
+	border-bottom: 1px solid #aaa;
+}
+.others-content{
+	margin-left: 5px;
+	font-size: 12pt;
+}
+.others-time{
+	margin-left: 5px;
+	font-size: 6pt;
+	font-weight: 200;
+}
+
+
+

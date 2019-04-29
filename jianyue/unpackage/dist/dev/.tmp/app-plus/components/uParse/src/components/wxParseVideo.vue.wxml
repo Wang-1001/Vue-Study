@@ -1,1 +1,0 @@
-<template name="34337f2f"><view class="_view 34337f2f {{node.classStr}}" style=" {{node.styleStr}}"><video class="_video 34337f2f video-video {{node.classStr}}" src="{{node.attr.src}}"></video></view></template>

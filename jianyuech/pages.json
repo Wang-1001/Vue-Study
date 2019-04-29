@@ -1,0 +1,237 @@
+{
+	"pages": [
+		//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "文章",
+				//允许下拉刷新
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/article_detail/article_detail",
+			"style": {
+				"navigationBarTitleText": "文章详情",
+				"enablePullDownRefresh": true
+		
+			}
+		},
+		{
+			"path": "pages/info/info",
+			"style": {}
+		},
+		
+		
+		
+		
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息"
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/signin/signin",
+			"style": {}
+		},
+		{
+			"path": "pages/write/write",
+			"style": {}
+		},
+		
+		{
+			"path": "pages/setting/setting",
+			"style": {}
+		},
+		{
+			"path": "pages/setting/wzgxts",
+			"style": {}
+		},
+		{
+			"path": "pages/setting/hmdsz",
+			"style": {}
+		},
+		{
+			"path": "pages/setting/hsz",
+			"style": {}
+		},
+		{
+			"path": "pages/setting/xxxts",
+			"style": {}
+		},
+		{
+			"path": "pages/setting/yszs",
+			"style": {}
+		},
+		{
+			"path": "pages/setting/zssz",
+			"style": {}
+		},
+
+
+
+
+        {
+        	"path": "pages/user_info/user_info",
+        	"style": {
+        		"navigationBarTitleText": "编辑个人资料",
+        		"enablePullDownRefresh": true
+        
+        	}
+        },
+
+
+		{
+			"path": "pages/message/interaction",
+			"style": {
+				"navigationBarTitleText": "互动消息",
+				"enablePullDownRefresh": true
+
+			}
+		},
+		{
+			"path": "pages/message/jianshuzuan",
+			"style": {
+				"navigationBarTitleText": "明细",
+				"enablePullDownRefresh": true
+
+			}
+		},
+		{
+			"path": "pages/message/others",
+			"style": {
+				"navigationBarTitleText": "其他提醒",
+				"enablePullDownRefresh": true
+
+			}
+		},
+		{
+			"path": "pages/message/newmessage",
+			"style": {
+				"navigationBarTitleText": "新简信",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+            "path" : "pages/name_info/name_info",
+            "style" : {
+				"navigationBarTitleText": "更改昵称"
+			}
+        },
+		{
+		    "path" : "pages/signup/signup",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/password/password",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/search/search",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/special/bsc",
+		    "style" : {
+				"navigationBarTitleText": "贝市场"
+			}
+		},
+		{
+		    "path" : "pages/special/jygc",
+		    "style" : {
+				"navigationBarTitleText": "简友市场"
+			}
+		},
+		{
+		    "path" : "pages/special/rmzt",
+		    "style" : {
+				"navigationBarTitleText": "热门专题"
+			}
+		},
+		{
+		    "path" : "pages/special/tsjy",
+		    "style" : {
+				"navigationBarTitleText": "投诉建议"
+			}
+		},
+		{
+		    "path" : "pages/special/hjgy",
+		    "style" : {
+				"navigationBarTitleText": "互加公益"
+			}
+		},
+		{
+		    "path" : "pages/special/wgzdzt",
+		    "style" : {
+				"navigationBarTitleText": "我关注的专题"
+			}
+		},
+		{
+		    "path" : "pages/more/more",
+		    "style" : {
+				
+			}
+		},
+		{
+		    "path" : "pages/password_info/password_info",
+		    "style" : {
+				"navigationBarTitleText": "重置密码"
+			}
+		},
+		{
+			"path": "pages/personal-center/personal-center",
+			"style": {
+				"navigationBarTitleText": "个人中心"
+			}
+		},
+		
+		
+		{
+			"path": "pages/write/jianxin",
+			"style": {
+				"navigationBarTitleText": "写简信",
+				"enablePullDownRefresh": true
+		
+			}
+		}
+		
+
+
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		// "navigationBarTitleText" : "简阅",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#707070",
+		"selectedColor": "#DE533A",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "文章",
+				"iconPath": "static/nav1.png",
+				"selectedIconPath": "static/nav1-a.png"
+			},
+			{
+				"pagePath": "pages/message/message",
+				"text": "消息",
+				"iconPath": "static/nav2.png",
+				"selectedIconPath": "static/nav2-a.png"
+			},
+			{
+				"pagePath": "pages/my/my",
+				"text": "我的",
+				"iconPath": "static/nav3.png",
+				"selectedIconPath": "static/nav3-a.png"
+			}
+		]
+	}
+}
